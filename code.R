@@ -59,4 +59,7 @@ summary(merge_CO2)
 
 # 输出结果
 stargazer(depth_CH4, depth_N2O, depth_CO2, title = "results", align = F, type = "text", no.space = TRUE, out = "depth.html")
-stargazer(slow_CH4, slow_N2O, slow_CO2, title = "results", align = F, type = "text", no.space = TRUE, out = "slow.html")
+stargazer(slow_1_CH4, slow_1_N2O, slow_1_CO2, title = "results", align = F, type = "text", no.space = TRUE, out = "slow_1.html")
+stargazer(slow_2_CH4, slow_2_N2O, slow_2_CO2, title = "results", align = F, type = "text", no.space = TRUE, out = "slow_2.html")
+stargazer(merge_CH4, merge_N2O, merge_CO2, title = "results", align = F, type = "text", no.space = TRUE, out = "merge.html")
+

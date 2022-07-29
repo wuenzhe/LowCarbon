@@ -1,6 +1,6 @@
 # 设置工作路径
 getwd()
-setwd("D:/个人文件/Low Carbon/data")
+setwd("D:/个人文件/Low Carbon/low carbon")
 
 # 加载工具包
 library(xlsx)

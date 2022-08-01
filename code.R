@@ -13,16 +13,16 @@ library(dplyr)
 library(stargazer)
 
 # 导入数据
-df1 <- read.xlsx("carbon.xlsx", sheetName = "depth", header = T)
-df2 <- read.xlsx("carbon.xlsx", sheetName = "slow_1", header = T)
-df3 <- read.xlsx("carbon.xlsx", sheetName = "slow_2", header = T)
-df4 <- read.xlsx("carbon.xlsx", sheetName = "merge", header = T)
+df1 <- read.xlsx("raw data.xlsx", sheetName = "depth", header = T)
+df2 <- read.xlsx("raw data.xlsx", sheetName = "slow_1", header = T)
+df3 <- read.xlsx("raw data.xlsx", sheetName = "slow_2", header = T)
+df4 <- read.xlsx("raw data.xlsx", sheetName = "merge", header = T)
 summary(df1)
 summary(df2)
 summary(df3)
 summary(df4)
 
-# 变量重名名
+# 变量重命名
 names(df1)
 names(df1)[c(1: 10)] <- c("id", "CH4", "N2O", "CO2", "depth", "ratio", "density", "irrigation", "temperature", "organics")
 names(df2)

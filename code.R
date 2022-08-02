@@ -16,8 +16,8 @@ library(stargazer)
 
 # 导入数据
 df1 <- read.xlsx("raw data.xlsx", sheetName = "depth", header = T)
-df2 <- read.xlsx("raw data.xlsx", sheetName = "slow_1", header = T)
-df3 <- read.xlsx("raw data.xlsx", sheetName = "slow_2", header = T)
+df2 <- read.xlsx("raw data.xlsx", sheetName = "SRNF_1", header = T)
+df3 <- read.xlsx("raw data.xlsx", sheetName = "SRNF_2", header = T)
 df4 <- read.xlsx("raw data.xlsx", sheetName = "merge", header = T)
 
 # 变量重命名
@@ -67,11 +67,11 @@ summary(SRNF_2_N2O)
 SRNF_2_CO2 <- lm(CO2 ~ SRNF + N + densi + irrig + temper + organ, data = df3)
 summary(SRNF_2_CO2)
 ## merge
-merge_CH4 <- lm(CH4 ~ depth + ratio + N + SRNF + densi + irrig + temper + organ, data = df4)
+merge_CH4 <- lm(CH4 ~ N + SRNF + depth + ratio + densi + irrig + temper + organ, data = df4)
 summary(merge_CH4)
-merge_N2O <- lm(N2O ~ depth + ratio + N + SRNF + densi + irrig + temper + organ, data = df4)
+merge_N2O <- lm(N2O ~ N + SRNF + depth + ratio + densi + irrig + temper + organ, data = df4)
 summary(merge_N2O)
-merge_CO2 <- lm(CO2 ~ depth + ratio + N + SRNF + densi + irrig + temper + organ, data = df4)
+merge_CO2 <- lm(CO2 ~ N + SRNF + depth + ratio + densi + irrig + temper + organ, data = df4)
 summary(merge_CO2)
 
 # 输出结果

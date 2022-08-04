@@ -1,7 +1,7 @@
-# 1. 氮肥深施样本（48）
-# 2. 缓释肥样本（44）
+# 1. 氮肥深施样本（18）
+# 2. 缓释肥样本（11）
 # 3. 缓释肥样本 + 氮肥深施度为0cm的样本（52）
-# 4. 合并变量及样本（92）
+# 1. 合并变量及样本（92）
 
 rm(list = ls())
 
@@ -30,6 +30,15 @@ names(df3)[c(1: 10)] <- c("id", "CH4", "N2O", "CO2", "SRNF", "N", "densi", "irri
 names(df4)
 names(df4)[c(1: 12)] <- c("id", "CH4", "N2O", "CO2", "depth", "ratio", "N", "SRNF", "densi", "irrig", "temper", "organ")
 
+# 字符型变量处理
+str(df4)
+df4 <- within(df4, {
+  irrig[irrig == "间歇性节水灌溉"] <- 1
+  irrig[irrig == "淹水灌溉"] <- 0
+})
+df4$irrig <- as.numeric(df4$irrig)
+str(df4)
+
 # 单位换算
 df2$N <- df2$N / 2
 df2$SRNF <- df2$SRNF / 2
@@ -47,28 +56,28 @@ summary(df4)
 # 回归分析
 ## depth
 depth_CH4 <- lm(CH4 ~ depth + ratio + densi + irrig + temper + organ, data = df1)
-summary(depth_CH4)
+summary(depth_CH1)
 depth_N2O <- lm(N2O ~ depth + ratio + densi + irrig + temper + organ, data = df1)
 summary(depth_N2O)
 depth_CO2 <- lm(CO2 ~ depth + ratio + densi + irrig + temper + organ, data = df1)
 summary(depth_CO2)
 ## SRNF_1
 SRNF_1_CH4 <- lm(CH4 ~ SRNF + N + densi + irrig + temper + organ, data = df2)
-summary(SRNF_1_CH4)
+summary(SRNF_1_CH1)
 SRNF_1_N2O <- lm(N2O ~ SRNF + N + densi + irrig + temper + organ, data = df2)
 summary(SRNF_1_N2O)
 SRNF_1_CO2 <- lm(CO2 ~ SRNF + N + densi + irrig + temper + organ, data = df2)
 summary(SRNF_1_CO2)
 ## SRNF_2
 SRNF_2_CH4 <- lm(CH4 ~ SRNF + N + densi + irrig + temper + organ, data = df3)
-summary(SRNF_2_CH4)
+summary(SRNF_2_CH1)
 SRNF_2_N2O <- lm(N2O ~ SRNF + N + densi + irrig + temper + organ, data = df3)
 summary(SRNF_2_N2O)
 SRNF_2_CO2 <- lm(CO2 ~ SRNF + N + densi + irrig + temper + organ, data = df3)
 summary(SRNF_2_CO2)
 ## merge
 merge_CH4 <- lm(CH4 ~ N + SRNF + depth + ratio + densi + irrig + temper + organ, data = df4)
-summary(merge_CH4)
+summary(merge_CH1)
 merge_N2O <- lm(N2O ~ N + SRNF + depth + ratio + densi + irrig + temper + organ, data = df4)
 summary(merge_N2O)
 merge_CO2 <- lm(CO2 ~ N + SRNF + depth + ratio + densi + irrig + temper + organ, data = df4)
@@ -79,4 +88,3 @@ stargazer(depth_CH4, depth_N2O, depth_CO2, title = "results", align = F, type = 
 stargazer(SRNF_1_CH4, SRNF_1_N2O, SRNF_1_CO2, title = "results", align = F, type = "text", no.space = TRUE, out = "SRNF_1.html")
 stargazer(SRNF_2_CH4, SRNF_2_N2O, SRNF_2_CO2, title = "results", align = F, type = "text", no.space = TRUE, out = "SRNF_2.html")
 stargazer(merge_CH4, merge_N2O, merge_CO2, title = "results", align = F, type = "text", no.space = TRUE, out = "merge.html")
-

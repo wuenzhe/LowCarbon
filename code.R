@@ -15,76 +15,47 @@ library(dplyr)
 library(stargazer)
 
 # 导入数据
-df1 <- read.xlsx("raw data.xlsx", sheetName = "depth", header = T)
-df2 <- read.xlsx("raw data.xlsx", sheetName = "SRNF_1", header = T)
-df3 <- read.xlsx("raw data.xlsx", sheetName = "SRNF_2", header = T)
-df4 <- read.xlsx("raw data.xlsx", sheetName = "merge", header = T)
+df <- read.xlsx("raw data.xlsx", sheetName = "merge", header = T)
 
 # 变量重命名
-names(df1)
-names(df1)[c(1: 10)] <- c("id", "CH4", "N2O", "CO2", "depth", "ratio", "densi", "irrig", "temper", "organ")
-names(df2)
-names(df2)[c(1: 10)] <- c("id", "CH4", "N2O", "CO2", "SRNF", "N", "densi", "irrig", "temper", "organ")
-names(df3)
-names(df3)[c(1: 10)] <- c("id", "CH4", "N2O", "CO2", "SRNF", "N", "densi", "irrig", "temper", "organ")
-names(df4)
-names(df4)[c(1: 12)] <- c("id", "CH4", "N2O", "CO2", "depth", "ratio", "N", "SRNF", "densi", "irrig", "temper", "organ")
+names(df)
+names(df)[c(1: 13)] <- c("id", "CH4", "N2O", "CO2", "depth", "ratio", "N", "SRNF", "densi", "irrig", "temper", "organ", "spe")
 
 # 字符型变量处理
-str(df4)
-df4 <- within(df4, {
+df$YLY6 <- df$spe
+names(df)[13] <- "LYP9"
+str(df)
+df <- within(df, {
   irrig[irrig == "间歇性节水灌溉"] <- 1
   irrig[irrig == "淹水灌溉"] <- 0
+  LYP9[LYP9 ==  "黄华占"] <- 0
+  LYP9[LYP9 ==  "两优培九"] <- 1
+  LYP9[LYP9 ==  "扬两优6号"] <- 0
+  YLY6[YLY6 ==  "黄华占"] <- 0
+  YLY6[YLY6 ==  "两优培九"] <- 0
+  YLY6[YLY6 ==  "扬两优6号"] <- 1
 })
-df4$irrig <- as.numeric(df4$irrig)
-str(df4)
+df <- within(df, {
+  irrig <- as.numeric(irrig)
+  LYP9 <- as.numeric(LYP9)
+  YLY6 <- as.numeric(YLY6)
+})
+str(df)
 
 # 单位换算
-df2$N <- df2$N / 2
-df2$SRNF <- df2$SRNF / 2
-df3$N <- df3$N / 2
-df3$SRNF <- df3$SRNF / 2
-df4$N <- df4$N / 2
-df4$SRNF <- df4$SRNF / 2
+df$N <- df$N / 2
+df$SRNF <- df$SRNF / 2
 
 # 描述性统计
-summary(df1)
-summary(df2)
-summary(df3)
-summary(df4)
+summary(df)
 
 # 回归分析
-## depth
-depth_CH4 <- lm(CH4 ~ depth + ratio + densi + irrig + temper + organ, data = df1)
-summary(depth_CH1)
-depth_N2O <- lm(N2O ~ depth + ratio + densi + irrig + temper + organ, data = df1)
-summary(depth_N2O)
-depth_CO2 <- lm(CO2 ~ depth + ratio + densi + irrig + temper + organ, data = df1)
-summary(depth_CO2)
-## SRNF_1
-SRNF_1_CH4 <- lm(CH4 ~ SRNF + N + densi + irrig + temper + organ, data = df2)
-summary(SRNF_1_CH1)
-SRNF_1_N2O <- lm(N2O ~ SRNF + N + densi + irrig + temper + organ, data = df2)
-summary(SRNF_1_N2O)
-SRNF_1_CO2 <- lm(CO2 ~ SRNF + N + densi + irrig + temper + organ, data = df2)
-summary(SRNF_1_CO2)
-## SRNF_2
-SRNF_2_CH4 <- lm(CH4 ~ SRNF + N + densi + irrig + temper + organ, data = df3)
-summary(SRNF_2_CH1)
-SRNF_2_N2O <- lm(N2O ~ SRNF + N + densi + irrig + temper + organ, data = df3)
-summary(SRNF_2_N2O)
-SRNF_2_CO2 <- lm(CO2 ~ SRNF + N + densi + irrig + temper + organ, data = df3)
-summary(SRNF_2_CO2)
-## merge
-merge_CH4 <- lm(CH4 ~ N + SRNF + depth + ratio + densi + irrig + temper + organ, data = df4)
-summary(merge_CH1)
-merge_N2O <- lm(N2O ~ N + SRNF + depth + ratio + densi + irrig + temper + organ, data = df4)
-summary(merge_N2O)
-merge_CO2 <- lm(CO2 ~ N + SRNF + depth + ratio + densi + irrig + temper + organ, data = df4)
-summary(merge_CO2)
+reg_result_CH4 <- lm(CH4 ~ N + SRNF + depth + ratio + densi + irrig + temper + organ + LYP9 + YLY6, data = df)
+summary(reg_result_CH4)
+reg_result_N2O <- lm(N2O ~ N + SRNF + depth + ratio + densi + irrig + temper + organ + LYP9 + YLY6, data = df)
+summary(reg_result_N2O)
+reg_result_CO2 <- lm(CO2 ~ N + SRNF + depth + ratio + densi + irrig + temper + organ + LYP9 + YLY6, data = df)
+summary(reg_result_CO2)
 
 # 输出结果
-stargazer(depth_CH4, depth_N2O, depth_CO2, title = "results", align = F, type = "text", no.space = TRUE, out = "depth.html")
-stargazer(SRNF_1_CH4, SRNF_1_N2O, SRNF_1_CO2, title = "results", align = F, type = "text", no.space = TRUE, out = "SRNF_1.html")
-stargazer(SRNF_2_CH4, SRNF_2_N2O, SRNF_2_CO2, title = "results", align = F, type = "text", no.space = TRUE, out = "SRNF_2.html")
-stargazer(merge_CH4, merge_N2O, merge_CO2, title = "results", align = F, type = "text", no.space = TRUE, out = "merge.html")
+stargazer(reg_result_CH4, reg_result_N2O, reg_result_CO2, title = "results", align = F, type = "text", no.space = TRUE, out = "reg_results.html")

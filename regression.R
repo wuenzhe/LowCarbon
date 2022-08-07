@@ -34,11 +34,6 @@ df <- within(df, {
   YLY6[YLY6 ==  "扬两优6号"] <- 1
   YLY6 <- as.numeric(YLY6)
 })
-df <- within(df, {
-  irrig <- as.numeric(irrig)
-  LYP9 <- as.numeric(LYP9)
-  YLY6 <- as.numeric(YLY6)
-})
 str(df)
 
 # 单位换算
@@ -48,29 +43,38 @@ df$SRNF <- SRNF / 2
 df$pest <- pest / 2
 detach(df)
 
+# 单位换算
+attach(df)
+df$CH4 <- CH4 / 15
+df$N2O <- N2O / 15
+df$N <- N / 15
+df$SRNF <- SRNF / 15
+df$densi <- densi / 15
+detach(df)
+
 # 描述性统计
 summary(df)
 
 # 全样本全变量回归分析
-reg_result_CH4 <- lm(CH4 ~ N + SRNF + depth + ratio + densi + irrig + temper + organ + LYP9 + YLY6 + pest, data = df)
+reg_result_CH4 <- lm(CH4 ~ N + SRNF + depth + ratio + densi + irrig + temper + organ + pest + LYP9 + YLY6, data = df)
 summary(reg_result_CH4)
-reg_result_N2O <- lm(N2O ~ N + SRNF + depth + ratio + densi + irrig + temper + organ + LYP9 + YLY6 + pest, data = df)
+reg_result_N2O <- lm(N2O ~ N + SRNF + depth + ratio + densi + irrig + temper + organ + pest + LYP9 + YLY6, data = df)
 summary(reg_result_N2O)
-reg_result_CO2 <- lm(CO2 ~ N + SRNF + depth + ratio + densi + irrig + temper + organ + LYP9 + YLY6 + pest, data = df)
+reg_result_CO2 <- lm(CO2 ~ N + SRNF + depth + ratio + densi + irrig + temper + organ + pest + LYP9 + YLY6, data = df)
 summary(reg_result_CO2)
 
 # 选入92个样本观测
 # df92 <- df[1: 92, ]
 # summary(df92)
-# reg_result_CH4 <- lm(CH4 ~ N + SRNF + depth + ratio + densi + irrig + temper + organ + LYP9 + YLY6 + pest, data = df92)
+# reg_result_CH4 <- lm(CH4 ~ N + SRNF + depth + ratio + densi + irrig + temper + organ + pest + LYP9 + YLY6, data = df92)
 # summary(reg_result_CH4)
-# reg_result_N2O <- lm(N2O ~ N + SRNF + depth + ratio + densi + irrig + temper + organ + LYP9 + YLY6 + pest, data = df92)
+# reg_result_N2O <- lm(N2O ~ N + SRNF + depth + ratio + densi + irrig + temper + organ + pest + LYP9 + YLY6, data = df92)
 # summary(reg_result_N2O)
-# reg_result_CO2 <- lm(CO2 ~ N + SRNF + depth + ratio + densi + irrig + temper + organ + LYP9 + YLY6 + pest, data = df92)
+# reg_result_CO2 <- lm(CO2 ~ N + SRNF + depth + ratio + densi + irrig + temper + organ + pest + LYP9 + YLY6, data = df92)
 # summary(reg_result_CO2)
 # stargazer(reg_result_CH4, reg_result_N2O, reg_result_CO2, title = "results", align = F, type = "text", no.space = TRUE, out = "reg_results_92.html")
 
-# 剔除新增变量（品种，农药）
+# 剔除新增变量（品种、农药）
 # dfvar <- df[, 1: 12]
 # summary(dfvar)
 # reg_result_CH4 <- lm(CH4 ~ N + SRNF + depth + ratio + densi + irrig + temper + organ, data = dfvar)

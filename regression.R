@@ -3,7 +3,8 @@ rm(list = ls())
 
 # 设置工作路径
 getwd()
-setwd("D:/个人文件/Low Carbon/low carbon")
+# setwd("D:/个人文件/Low Carbon/low carbon")
+setwd("C:/Users/enzhe/Desktop")
 
 # 加载工具包
 library(xlsx)
@@ -11,12 +12,12 @@ library(dplyr)
 library(stargazer)
 
 # 导入数据
-df <- read.xlsx("raw data.xlsx", sheetName = "全样本", header = T)
+# df <- read.xlsx("raw data.xlsx", sheetName = "全样本", header = T)
+df <- read.xlsx("raw data 1.xlsx", sheetName = "全样本", header = T)
 
 # 变量重命名
 names(df)
 names(df)[c(1: 15)] <- c("id", "CH4", "N2O", "CO2", "depth", "ratio", "N", "SRNF", "densi", "irrigMethod", "irrigFreq", "temper", "organ", "Shannon", "spe")
-names(df)
 
 # 字符型变量处理
 df$YLY6 <- df$spe
@@ -38,47 +39,26 @@ df <- within(df, {
 str(df)
 
 # 单位换算
-attach(df)
-df$N <- N / 2
-df$SRNF <- SRNF / 2
-detach(df)
+df <- within(df, {
+  N <- N / 2
+  SRNF <- SRNF / 2
+})
 
 # 描述性统计
 summary(df)
 
 # 基准回归分析
-reg_result_CH4 <- lm(CH4 ~ N + SRNF + depth + ratio + densi + irrigFreq + temper + organ + Shannon + LYP9 + YLY6, data = df)
-summary(reg_result_CH4)
-reg_result_N2O <- lm(N2O ~ N + SRNF + depth + ratio + densi + irrigFreq + temper + organ + Shannon + LYP9 + YLY6, data = df)
-summary(reg_result_N2O)
-reg_result_CO2 <- lm(CO2 ~ N + SRNF + depth + ratio + densi + irrigFreq + temper + organ + Shannon + LYP9 + YLY6, data = df)
-summary(reg_result_CO2)
-stargazer(reg_result_CH4, reg_result_N2O, reg_result_CO2, title = "results", align = F, type = "text", no.space = TRUE, out = "reg_results_127.html")
-
-# 剔除Shannon
 reg_result_CH4 <- lm(CH4 ~ N + SRNF + depth + ratio + densi + irrigFreq + temper + organ + LYP9 + YLY6, data = df)
 summary(reg_result_CH4)
-reg_result_N2O <- lm(N2O ~ N + SRNF + depth + ratio + densi + irrigFreq + temper + organ + LYP9 + YLY6, data = df)
+reg_result_N2O <- lm(N2O ~ N + SRNF + depth + ratio + densi + irrigFreq + temper + organ + LYP9 + YLY6 + Shannon + seed + pest, data = df)
 summary(reg_result_N2O)
-reg_result_CO2 <- lm(CO2 ~ N + SRNF + depth + ratio + densi + irrigFreq + temper + organ + LYP9 + YLY6, data = df)
-summary(reg_result_CO2)
-stargazer(reg_result_CH4, reg_result_N2O, reg_result_CO2, title = "results", align = F, type = "text", no.space = TRUE, out = "reg_results_127_剔除多样性.html")
+stargazer(reg_result_CH4, reg_result_N2O, title = "results", align = F, type = "text", no.space = TRUE, out = "reg_results_127.html")
 
 # 选入92个样本观测
 df92 <- df[1: 92, ]
 summary(df92)
-reg_result_CH4 <- lm(CH4 ~ N + SRNF + depth + ratio + densi + irrigFreq + temper + organ + Shannon + LYP9 + YLY6, data = df92)
-summary(reg_result_CH4)
-reg_result_N2O <- lm(N2O ~ N + SRNF + depth + ratio + densi + irrigFreq + temper + organ + Shannon + LYP9 + YLY6, data = df92)
-summary(reg_result_N2O)
-reg_result_CO2 <- lm(CO2 ~ N + SRNF + depth + ratio + densi + irrigFreq + temper + organ + Shannon + LYP9 + YLY6, data = df92)
-summary(reg_result_CO2)
-stargazer(reg_result_CH4, reg_result_N2O, reg_result_CO2, title = "results", align = F, type = "text", no.space = TRUE, out = "reg_results_92.html")
-
 reg_result_CH4 <- lm(CH4 ~ N + SRNF + depth + ratio + densi + irrigFreq + temper + organ + LYP9 + YLY6, data = df92)
 summary(reg_result_CH4)
-reg_result_N2O <- lm(N2O ~ N + SRNF + depth + ratio + densi + irrigFreq + temper + organ + LYP9 + YLY6, data = df92)
+reg_result_N2O <- lm(N2O ~ N + SRNF + depth + ratio + densi + irrigFreq + temper + organ + LYP9 + YLY6 + Shannon + seed + pest, data = df92)
 summary(reg_result_N2O)
-reg_result_CO2 <- lm(CO2 ~ N + SRNF + depth + ratio + densi + irrigFreq + temper + organ + LYP9 + YLY6, data = df92)
-summary(reg_result_CO2)
-stargazer(reg_result_CH4, reg_result_N2O, reg_result_CO2, title = "results", align = F, type = "text", no.space = TRUE, out = "reg_results_92_剔除多样性.html")
+stargazer(reg_result_CH4, reg_result_N2O, title = "results", align = F, type = "text", no.space = TRUE, out = "reg_results_92.html")

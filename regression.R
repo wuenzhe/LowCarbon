@@ -3,7 +3,7 @@ rm(list = ls())
 
 # 设置工作路径
 getwd()
-setwd("D:/个人文件/Low Carbon/low carbon")
+setwd("D:/Records/OneDrive - webmail.hzau.edu.cn/Low Carbon/data")
 
 # 加载工具包
 library(xlsx)
@@ -41,6 +41,7 @@ str(df)
 df <- within(df, {
   N <- N / 2
   SRNF <- SRNF / 2
+  seed <- seed / 2
   pest <- pest / 2
 })
 
